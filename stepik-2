@@ -1,0 +1,186 @@
+// massiv.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
+//
+
+#include <iostream>
+#include <ctime>
+#include <chrono>
+using namespace std;
+int main()
+{
+    setlocale(LC_ALL, "Rus");
+    srand(time(0));
+    const int N = 100;
+    int mass[N];
+    
+    for (int i = 0; i < N; i++) {
+        mass[i] = -99 + rand() % 200 ;
+        cout << mass[i] << " ";
+   
+    }
+    cout << endl;
+    auto start = chrono::steady_clock::now();
+    int min = mass[0];
+    for (int i = 1; i < N; i++) {
+        if (mass[i] < min)
+            min = mass[i];
+    }
+    cout << "Минимальный элемент массива:" << min;
+    cout << endl;
+    int max = mass[0];
+    for (int i = 1; i < N; i++) {
+        if (mass[i] > max)
+            max = mass[i];
+
+    }
+    cout << "Максимальный элемнт массива:" << max;
+    cout << endl;
+    auto end = chrono::steady_clock::now();
+    cout << "Затраченное время в милисекундах на поиск мин. и макс. значения в неотсортированном массиве:"
+        << chrono::duration_cast<chrono::milliseconds>(end - start).count()
+        << " ms" << endl;
+
+    cout << endl;
+    auto begin = chrono::steady_clock::now();
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N - 1 - i; j++) {
+            if (mass[j] > mass[j + 1])
+                swap(mass[j], mass[j + 1]);
+
+        }
+
+        
+        
+    }
+    for (int i = 0; i < N; i++) {
+        cout << mass[i] << " ";
+    }
+    cout << endl;
+    auto over = chrono::steady_clock::now();
+    cout << "Затраченное время в милисекундах на сортировку массива: "
+        << chrono::duration_cast<chrono::milliseconds>(over - begin).count()
+        << " ms" << endl;
+    cout << endl;
+    auto first = chrono::steady_clock::now();
+    int minvalue = mass[0];
+    for (int i = 1; i < N; i++) {
+        if (mass[i] < minvalue)
+            minvalue = mass[i];
+    }
+    cout << "Минимальный элемент массива:" << minvalue;
+    cout << endl;
+    int maxvalue = mass[0];
+    for (int i = 1; i < N; i++) {
+        if (mass[i] > maxvalue)
+            maxvalue = mass[i];
+
+    }
+    cout << "Максимальный элемнт массива:" << maxvalue;
+    cout << endl;
+    auto all = chrono::steady_clock::now();
+    cout << "Затраченное время в милисекундах на поиск мин. и макс. значения в отсортирова: "
+        << chrono::duration_cast<chrono::milliseconds>(all - first).count()
+        << " ms" << endl;
+    cout << endl;
+    cout <<"Среднее значение макс. и мин. элемента:" << (maxvalue + minvalue) / 2;
+    cout << endl;
+    int x = (maxvalue + minvalue) / 2;
+    int k = 1;
+    for (int i = 0; i < N; i++) {
+        if (mass[i] == x) {
+            cout << "индекс элемента массива:" << i << endl;
+            
+            k = k + 1;
+        }
+    }
+    cout << "количество элементов: " << k;
+    cout << endl;
+    int a;
+    cout << "введите число :";
+    cin >> a;
+    int l = 0;
+    for (int i = 0; i < N; i++) {
+        if (mass[i] < a) {
+            l = l + 1;
+            
+            
+        }
+
+    }
+   
+    cout << "количество элементов массива меньше "<< a << ":" << " " << l;
+    cout << endl;
+    int b;
+    cout << "введите число :";
+    cin >> b;
+    int p = 0;
+    for (int i = 0; i < N; i++) {
+        if (mass[i] > b) {
+            p = p + 1;
+        }
+
+    }
+    cout << "количество элементов массива больше "<< b << ":" << " " << p;
+    cout << endl;
+    cout << "Загружается алгоритм линейного поиска... \n";
+    cout << "Введите число для поиска при помощи линейного \n";
+    int value;
+    cin >> value;
+    auto start2 = chrono::steady_clock::now();
+    for (int i = 0; i < N; i++)
+    {
+        if (mass[i] == value)
+        {
+            cout << "Ваше число в массиве \n";
+            return 0;
+        }
+    }
+    cout << "Вашего числа нет в массиве \n";
+    auto end2 = chrono::steady_clock::now();
+    cout  << "Линейный поиск -Затраченное время в милисекундах: "
+        << chrono::duration_cast<chrono::milliseconds>(end2 - start2).count()
+        << " ms" << endl;
+    cout << endl;
+    auto start3 = chrono::steady_clock::now();
+    int low = 0, high = N - 1, mid,const_value=value ;
+    while (low <= high) {
+        mid = (low + high) / 2;
+        if (value == mass[mid]) {
+            cout << "value" << value << "is located at index of" << mid << endl;
+            break;
+        }
+        else if (value > mass[mid])
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    auto end3 = chrono::steady_clock::now();
+    cout  << "Бинарный поиск- Затраченное время в милисекундах: "
+        << chrono::duration_cast<chrono::milliseconds>(end3 - start3).count()
+        << " ms" << endl;
+    //8)Смена местами элементов массива
+    cout << "8 задание" << endl;
+    cout << "введите индексы: ";
+    int m, n;
+    cin >> m >> n;
+    auto start4 = chrono::steady_clock::now();
+    swap(mass[m], mass[n]);
+
+    auto end4 = chrono::steady_clock::now();
+    cout << "Затраченное время в наносекундах: "
+        << chrono::duration_cast<chrono::nanoseconds>(end4 - start4).count()
+        << " nппs" << endl;
+    return 0;
+
+
+}
+
+// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
+// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
+
+// Советы по началу работы 
+//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
+//   2. В окне Team Explorer можно подключиться к системе управления версиями.
+//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщенияib.
+//   4. В окне "Список ошибок" можно просматривать ошибки.
+//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
+//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
