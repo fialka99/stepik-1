@@ -1,0 +1,76 @@
+
+#include <iostream>
+using namespace std;
+int main() {
+	//1) Вывести, сколько памяти (в байтах) на вашем компьютере отводится под различные типы данных со спецификаторами и без: int, short int, long int, float, double, long double, char и bool.
+	cout << "int:" << sizeof(int) << '\n' << "short:" << sizeof(short) << '\n' << "long:" << sizeof(long) << '\n' << "float:" << sizeof(float) << '\n' << "double:" << sizeof(double) << '\n' << "long double:" << sizeof(long double) << '\n' << "char:" << sizeof(char) << '\n' << "bool:" << sizeof(bool) << '\n';
+	//2) Вывести на экран двоичное представление в памяти (все разряды) целого числа. При выводе необходимо визуально обозначить знаковый разряд и значащие разряды отступами или цветом.
+	setlocale(LC_ALL, "Rus");
+	//2 задание
+	cout << "2 задание" << '\n';
+	int input;
+	cin >> input;
+	int a = sizeof(int) * 8-1 ; // 32 разряда
+	int unsigned mask = 1 << a;
+	for (int i = 1; i <= a; i++)
+	{
+		cout << ((input & mask) ? 1 : 0);
+		if (i%a == 0 || i % 8 == 0)
+			cout << (' ');
+		mask >>= 1;
+
+
+	} 
+	
+
+	//задание 3
+	cout << "\n";
+	cout << "3 задание" << '\n';
+	union {
+		int tool;
+		float f;
+	};
+	cout << "enter float: ";
+	cin >> f;
+	for (int i = 0; i <= a; i++)
+	{
+		cout << ((tool & mask) ? 1 : 0);
+		if (i == 0 || i % 8 == 0)
+			cout << " ";
+		tool <<= 1;
+	}
+	cout << '\n';
+	//задание 4
+	cout << "\n";
+	cout << "4 задание" << '\n';
+	union {
+		double d;
+		int mass[2];
+	};
+	cout << "введите double : ";
+	cin >> d;
+	for (int i = 0; i <= a; i++) {
+		cout << ((mass[1] & mask) ? 1 : 0);
+		if (i == 0 || i % 8 == 0)
+			cout << " ";
+		mass[1] <<= 1;
+	}
+	for (int i = 0; i <= a; i++)
+	{
+		cout << ((mass[0] & mask) ? 1 : 0);
+		if (i == 0 || i % 8 == 0)
+			cout << " ";
+		mass[0] <= 1;
+
+
+
+	}
+	cout << endl;
+	cout << &input<< " " << &f << " " << &d;
+	
+
+
+
+	return 0;
+
+}
