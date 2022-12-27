@@ -10,18 +10,16 @@ int main() {
 	cout << "2 задание" << '\n';
 	int input;
 	cin >> input;
-	int a = sizeof(int) * 8-1 ; // 32 разряда
-	int unsigned mask = 1 << a;
+	int a = sizeof(int) * 8 ; // 32 разряда
+	int unsigned mask = 1 << a-1;
 	for (int i = 1; i <= a; i++)
 	{
 		cout << ((input & mask) ? 1 : 0);
-		if (i%a == 0 || i % 8 == 0)
+		if (i % a == 0 || i % 8 == 0)
 			cout << (' ');
-		mask >>= 1;
+		input <<= 1;
+	}
 
-
-	} 
-	
 
 	//задание 3
 	cout << "\n";
@@ -32,10 +30,10 @@ int main() {
 	};
 	cout << "enter float: ";
 	cin >> f;
-	for (int i = 0; i <= a; i++)
+	for (int i = 1; i <= a; i++)
 	{
 		cout << ((tool & mask) ? 1 : 0);
-		if (i == 0 || i % 8 == 0)
+		if (i == 1 || i % 8 == 0)
 			cout << " ";
 		tool <<= 1;
 	}
@@ -49,16 +47,16 @@ int main() {
 	};
 	cout << "введите double : ";
 	cin >> d;
-	for (int i = 0; i <= a; i++) {
+	for (int i = 1; i <= a; i++) {
 		cout << ((mass[1] & mask) ? 1 : 0);
-		if (i == 0 || i % 8 == 0)
+		if (i==1 || i % 8 == 0)
 			cout << " ";
 		mass[1] <<= 1;
 	}
-	for (int i = 0; i <= a; i++)
+	for (int i = 1; i <= a; i++)
 	{
 		cout << ((mass[0] & mask) ? 1 : 0);
-		if (i == 0 || i % 8 == 0)
+		if ( i % 8 == 0)
 			cout << " ";
 		mass[0] <= 1;
 
@@ -66,8 +64,8 @@ int main() {
 
 	}
 	cout << endl;
-	cout << &input<< " " << &f << " " << &d;
-	
+
+
 
 
 
