@@ -1,0 +1,869 @@
+
+#include <iomanip>
+#include <iostream>
+#include <Windows.h>
+#include <chrono>
+#include <string>
+
+using namespace std;
+using namespace chrono;
+
+void Lab1(); // 1 пр
+void Lab2(); //  2пр
+void PrintArray(int*, int, int);
+void SwapAndPrint1(int*, int);
+void SwapAndPrint2(int*, int);
+void SwapAndPrint3(int*, int);
+void SwapAndPrint4(int*, int);
+void SortAndPrint(int*, int);
+void ChangeAndPrint(int*, int);
+void Lab3(); // 3 пр
+
+void print(string);
+string Replacement(string);
+void LinearSearch(string, string);
+void Task5(string);
+void Lab4(); // 4 пр
+
+int main()
+{
+	setlocale(0, "");
+	cout << "\t\t\t\t\t   Курсовая работа\n\n";
+
+	int lab_num = 0;
+	do {
+		if (lab_num == 0) {
+			do {
+				cout << "Выберите номер практической работы (для завершения работы программы напишите 0): ";
+				cin >> lab_num;
+			} while (lab_num < 0 || lab_num > 4);
+		}
+		if (lab_num == 0)
+			break;
+
+		switch (lab_num) {
+		case 1:
+			cout << "\n\n\t\t\tПрактическая работа 1\n\n";
+			Lab1();
+			break;
+		case 2:
+			cout << "\n\n\t\t\tПрактическая работа 2\n\n";
+			Lab2();
+			break;
+		case 3:
+			cout << "\n\n\t\t\tПрактическая работа 3\n\n";
+			Lab3();
+			break;
+		case 4:
+			cout << "\n\n\t\t\tПрактическая работа 4\n\n";
+			Lab4();
+			break;
+		}
+
+		do {
+			cout << "\nВыберите номер практической работы (для завершения работы программы напишите 0): ";
+			cin >> lab_num;
+		} while (lab_num < 0 || lab_num > 4);
+	} while (lab_num);
+	return 0;
+}
+
+void Lab1() {
+
+		//1) Вывести, сколько памяти (в байтах) на вашем компьютере отводится под различные типы данных со спецификаторами и без: int, short int, long int, float, double, long double, char и bool.
+		cout << "int:" << sizeof(int) << '\n' << "short:" << sizeof(short) << '\n' << "long:" << sizeof(long) << '\n' << "float:" << sizeof(float) << '\n' << "double:" << sizeof(double) << '\n' << "long double:" << sizeof(long double) << '\n' << "char:" << sizeof(char) << '\n' << "bool:" << sizeof(bool) << '\n';
+		//2) Вывести на экран двоичное представление в памяти (все разряды) целого числа. При выводе необходимо визуально обозначить знаковый разряд и значащие разряды отступами или цветом.
+		setlocale(LC_ALL, "Rus");
+		//2 задание
+		cout << "2 задание" << '\n';
+		int input;
+		cin >> input;
+		int a = sizeof(int) * 8; // 32 разряда
+		int mask = 1 << a - 1;
+		for (int i = 1; i <= a; i++)
+		{
+			cout << ((input & mask) ? 1 : 0);
+			if (i % a == 0 || i % 8 == 0)
+				cout << (' ');
+			input <<= 1;
+		}
+
+
+		//задание 3
+		cout << "\n";
+		cout << "3 задание" << '\n';
+		union {
+			int tool;
+			float f;
+		};
+		cout << "enter float: ";
+		cin >> f;
+		for (int i = 1; i <= a; i++)
+		{
+			cout << ((tool & mask) ? 1 : 0);
+			if (i == 1 || i % 8 == 0)
+				cout << " ";
+			tool <<= 1;
+		}
+		cout << '\n';
+		//задание 4
+		cout << "\n";
+		cout << "4 задание" << '\n';
+		union {
+			double d;
+			int mass[2];
+		};
+		cout << "введите double : ";
+		cin >> d;
+		for (int i = 1; i <= a; i++) {
+			cout << ((mass[1] & mask) ? 1 : 0);
+			if (i == 1 || i % 8 == 0)
+				cout << " ";
+			mass[1] <<= 1;
+		}
+		for (int i = 1; i <= a; i++)
+		{
+			cout << ((mass[0] & mask) ? 1 : 0);
+			if (i % 8 == 0)
+				cout << " ";
+			mass[0] <= 1;
+
+
+
+		}
+		cout << endl;
+
+
+
+
+
+	
+
+	}
+void Lab2()
+{
+   
+    srand(time(0));
+    const int N = 100;
+    int mass[N];
+
+    for (int i = 0; i < N; i++) {
+        mass[i] = -99 + rand() % 200;
+        cout << mass[i] << " ";
+
+    }
+    cout << endl;
+    auto start = chrono::steady_clock::now();
+    int min = mass[0];
+    for (int i = 1; i < N; i++) {
+        if (mass[i] < min)
+            min = mass[i];
+    }
+    cout << "Минимальный элемент массива:" << min;
+    cout << endl;
+    int max = mass[0];
+    for (int i = 1; i < N; i++) {
+        if (mass[i] > max)
+            max = mass[i];
+
+    }
+    cout << "Максимальный элемнт массива:" << max;
+    cout << endl;
+    auto end = chrono::steady_clock::now();
+    cout << "Затраченное время в милисекундах на поиск мин. и макс. значения в неотсортированном массиве:"
+        << chrono::duration_cast<chrono::milliseconds>(end - start).count()
+        << " ms" << endl;
+
+    cout << endl;
+    auto begin = chrono::steady_clock::now();
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N - 1 - i; j++) {
+            if (mass[j] > mass[j + 1])
+                swap(mass[j], mass[j + 1]);
+
+        }
+
+
+
+    }
+    for (int i = 0; i < N; i++) {
+        cout << mass[i] << " ";
+    }
+    cout << endl;
+    auto over = chrono::steady_clock::now();
+    cout << "Затраченное время в милисекундах на сортировку массива: "
+        << chrono::duration_cast<chrono::milliseconds>(over - begin).count()
+        << " ms" << endl;
+    cout << endl;
+    auto first = chrono::steady_clock::now();
+    int minvalue = mass[0];
+    for (int i = 1; i < N; i++) {
+        if (mass[i] < minvalue)
+            minvalue = mass[i];
+    }
+    cout << "Минимальный элемент массива:" << minvalue;
+    cout << endl;
+    int maxvalue = mass[0];
+    for (int i = 1; i < N; i++) {
+        if (mass[i] > maxvalue)
+            maxvalue = mass[i];
+
+    }
+    cout << "Максимальный элемнт массива:" << maxvalue;
+    cout << endl;
+    auto all = chrono::steady_clock::now();
+    cout << "Затраченное время в милисекундах на поиск мин. и макс. значения в отсортирова: "
+        << chrono::duration_cast<chrono::milliseconds>(all - first).count()
+        << " ms" << endl;
+    cout << endl;
+    cout << "Среднее значение макс. и мин. элемента:" << (maxvalue + minvalue) / 2;
+    cout << endl;
+    int x = (maxvalue + minvalue) / 2;
+    int k = 1;
+    for (int i = 0; i < N; i++) {
+        if (mass[i] == x) {
+            cout << "индекс элемента массива:" << i << endl;
+
+            k = k + 1;
+        }
+    }
+    cout << "количество элементов: " << k;
+    cout << endl;
+    int a;
+    cout << "введите число :";
+    cin >> a;
+    int l = 0;
+    for (int i = 0; i < N; i++) {
+        if (mass[i] < a) {
+            l = l + 1;
+
+
+        }
+
+    }
+
+    cout << "количество элементов массива меньше " << a << ":" << " " << l;
+    cout << endl;
+    int b;
+    cout << "введите число :";
+    cin >> b;
+    int p = 0;
+    for (int i = 0; i < N; i++) {
+        if (mass[i] > b) {
+            p = p + 1;
+        }
+
+    }
+    cout << "количество элементов массива больше " << b << ":" << " " << p;
+    cout << endl;
+    cout << "Загружается алгоритм линейного поиска... \n";
+    cout << "Введите число для поиска при помощи линейного \n";
+    int value;
+    cin >> value;
+    auto start2 = chrono::steady_clock::now();
+    for (int i = 0; i < N; i++)
+    {
+        if (mass[i] == value)
+        {
+            cout << "Ваше число в массиве \n";
+            
+        }
+    }
+    cout << "Вашего числа нет в массиве \n";
+    auto end2 = chrono::steady_clock::now();
+    cout << "Линейный поиск -Затраченное время в милисекундах: "
+        << chrono::duration_cast<chrono::milliseconds>(end2 - start2).count()
+        << " ms" << endl;
+    cout << endl;
+    auto start3 = chrono::steady_clock::now();
+    int low = 0, high = N - 1, mid, const_value = value;
+    while (low <= high) {
+        mid = (low + high) / 2;
+        if (value == mass[mid]) {
+            cout << "value" << value << "is located at index of" << mid << endl;
+            break;
+        }
+        else if (value > mass[mid])
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    auto end3 = chrono::steady_clock::now();
+    cout << "Бинарный поиск- Затраченное время в милисекундах: "
+        << chrono::duration_cast<chrono::milliseconds>(end3 - start3).count()
+        << " ms" << endl;
+    //8)Смена местами элементов массива
+    cout << "8 задание" << endl;
+    cout << "введите индексы: ";
+    int m, n;
+    cin >> m >> n;
+    auto start4 = chrono::steady_clock::now();
+    swap(mass[m], mass[n]);
+
+    auto end4 = chrono::steady_clock::now();
+    cout << "Затраченное время в наносекундах: "
+        << chrono::duration_cast<chrono::nanoseconds>(end4 - start4).count()
+        << " nппs" << endl;
+    
+
+
+
+
+
+
+
+}
+void PrintArray(int* ptr, int m, int n) {
+	int count = 0;
+	for (int i = 0; i < m * n; i++) {
+		++count;
+		cout << ptr[i] << "\t";
+		if (count % n == 0)
+			cout << endl;
+		Sleep(10);
+	}
+	cout << endl << endl;
+
+}
+
+void SwapAndPrint1(int* ptr, int n) {
+	int count = n * n, k = n / 2;
+	for (int i = 0; i < k; i++)
+		for (int j = 0; j < k; j++) {
+			int var1 = ptr[j + n * i];
+			int var2 = ptr[j + k + n * i];
+			int var3 = ptr[j + k + n * k + n * i];
+			int var4 = ptr[j + n * k + n * i];
+
+			ptr[j + n * i] = var4;
+			ptr[j + k + n * i] = var1;
+			ptr[j + k + n * k + n * i] = var2;
+			ptr[j + n * k + n * i] = var3;
+		}
+
+	PrintArray((int*)ptr, n, n);
+
+	for (int i = 0; i < k; i++)
+		for (int j = 0; j < k; j++) {
+			int var1 = ptr[j + n * i];
+			int var2 = ptr[j + k + n * i];
+			int var3 = ptr[j + k + n * k + n * i];
+			int var4 = ptr[j + n * k + n * i];
+
+			ptr[j + n * i] = var2;
+			ptr[j + k + n * i] = var3;
+			ptr[j + k + n * k + n * i] = var4;
+			ptr[j + n * k + n * i] = var1;
+		}
+}
+
+void SwapAndPrint2(int* ptr, int n) {
+	int count = n * n, k = n / 2;
+	for (int i = 0; i < k; i++)
+		for (int j = 0; j < k; j++) {
+			int var1 = ptr[j + n * i];
+			int var2 = ptr[j + k + n * i];
+			int var3 = ptr[j + k + n * k + n * i];
+			int var4 = ptr[j + n * k + n * i];
+
+			ptr[j + n * i] = var3;
+			ptr[j + k + n * i] = var4;
+			ptr[j + k + n * k + n * i] = var1;
+			ptr[j + n * k + n * i] = var2;
+		}
+
+	PrintArray((int*)ptr, n, n);
+
+	for (int i = 0; i < k; i++)
+		for (int j = 0; j < k; j++) {
+			int var1 = ptr[j + n * i];
+			int var2 = ptr[j + k + n * i];
+			int var3 = ptr[j + k + n * k + n * i];
+			int var4 = ptr[j + n * k + n * i];
+
+			ptr[j + n * i] = var3;
+			ptr[j + k + n * i] = var4;
+			ptr[j + k + n * k + n * i] = var1;
+			ptr[j + n * k + n * i] = var2;
+		}
+}
+
+void SwapAndPrint3(int* ptr, int n) {
+	int count = n * n, k = n / 2;
+	for (int i = 0; i < k; i++)
+		for (int j = 0; j < k; j++) {
+			int var1 = ptr[j + n * i];
+			int var2 = ptr[j + k + n * i];
+			int var3 = ptr[j + k + n * k + n * i];
+			int var4 = ptr[j + n * k + n * i];
+
+			ptr[j + n * i] = var4;
+			ptr[j + k + n * i] = var3;
+			ptr[j + k + n * k + n * i] = var2;
+			ptr[j + n * k + n * i] = var1;
+		}
+
+	PrintArray((int*)ptr, n, n);
+
+	for (int i = 0; i < k; i++)
+		for (int j = 0; j < k; j++) {
+			int var1 = ptr[j + n * i];
+			int var2 = ptr[j + k + n * i];
+			int var3 = ptr[j + k + n * k + n * i];
+			int var4 = ptr[j + n * k + n * i];
+
+			ptr[j + n * i] = var4;
+			ptr[j + k + n * i] = var3;
+			ptr[j + k + n * k + n * i] = var2;
+			ptr[j + n * k + n * i] = var1;
+		}
+}
+
+void SwapAndPrint4(int* ptr, int n) {
+	int count = n * n, k = n / 2;
+	for (int i = 0; i < k; i++)
+		for (int j = 0; j < k; j++) {
+			int var1 = ptr[j + n * i];
+			int var2 = ptr[j + k + n * i];
+			int var3 = ptr[j + k + n * k + n * i];
+			int var4 = ptr[j + n * k + n * i];
+
+			ptr[j + n * i] = var2;
+			ptr[j + k + n * i] = var1;
+			ptr[j + k + n * k + n * i] = var4;
+			ptr[j + n * k + n * i] = var3;
+		}
+
+	PrintArray((int*)ptr, n, n);
+
+	for (int i = 0; i < k; i++)
+		for (int j = 0; j < k; j++) {
+			int var1 = ptr[j + n * i];
+			int var2 = ptr[j + k + n * i];
+			int var3 = ptr[j + k + n * k + n * i];
+			int var4 = ptr[j + n * k + n * i];
+
+			ptr[j + n * i] = var2;
+			ptr[j + k + n * i] = var1;
+			ptr[j + k + n * k + n * i] = var4;
+			ptr[j + n * k + n * i] = var3;
+		}
+}
+
+void SortAndPrint(int* ptr, int n) {
+	for (int i = 0; i < n * n; i++)
+		for (int j = 0; j < n * n - 1; j++)
+			if (ptr[j] > ptr[j + 1])
+				swap(ptr[j], ptr[j + 1]);
+
+	PrintArray((int*)ptr, n, n);
+}
+
+void ChangeAndPrint(int* ptr, int n) {
+	int k;
+
+	cout << "1) Умножить элементы массива на ";
+	cin >> k;
+	for (int i = 0; i < n * n; i++) {
+		ptr[i] *= k;
+
+	}
+	PrintArray((int*)ptr, n, n);
+	cout << endl;
+
+	cout << "2) Разделить элементы массива на ";
+	cin >> k;
+	for (int i = 0; i < n * n; i++)
+		ptr[i] /= k;
+	cout << endl;
+	PrintArray((int*)ptr, n, n);
+
+	cout << "3) Прибавить к элементам массива ";
+	cin >> k;
+	for (int i = 0; i < n * n; i++)
+		ptr[i] += k;
+	cout << endl;
+	PrintArray((int*)ptr, n, n);
+
+	cout << "4) Вычесть из элементов массива  ";
+	cin >> k;
+	for (int i = 0; i < n * n; i++)
+		ptr[i] -= k;
+	cout << endl;
+
+	PrintArray((int*)ptr, n, n);
+}
+
+void Lab3()
+{
+	// 1.1) Вводим размерность
+	cout << "\t\t\tЗадание 1" << endl << endl;
+	int n;
+	bool incorrect = 1;
+	do {
+		cout << "Введите размерность: ";
+		cin >> n;
+		if (n == 6 || n == 8 || n == 10)
+			incorrect = 0;
+		else
+			cout << "Введено неверное значение." << endl;
+	} while (incorrect);
+
+	// 1.2) Создаем массив
+	const int N6 = 6;
+	const int N8 = 8;
+	const int N10 = 10;
+
+	int Arr6[6][6];
+	for (int i = 0; i < 6; i++)
+		for (int j = 0; j < 6; j++)
+			Arr6[i][j] = 0;
+	int Arr8[8][8];
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 8; j++)
+			Arr8[i][j] = 0;
+	int Arr10[10][10];
+
+	for (int i = 0; i < 10; i++)
+		for (int j = 0; j < 10; j++)
+			Arr10[i][j] = 0;
+	cout << "Выберите схему заполнения массива (1 или 2): ";
+	int number;
+	cin >> number;
+	switch (number) {
+	case 1:
+		if (n == 6)
+		{
+
+			int k = 0;
+			for (int i = 0; i < N6 / 2; i++) {
+				int* ptr = &Arr6[i][i];
+				for (int j = 0; j < (N6 - 1 - 2 * i); j++) {
+					*ptr = ++k;
+					ptr += 1;
+				}
+				for (int j = 0; j < (N6 - 1 - 2 * i); j++) {
+					*ptr = ++k;
+					ptr += N6;
+				}
+				for (int j = 0; j < (N6 - 1 - 2 * i); j++) {
+					*ptr = ++k;
+					ptr -= 1;
+				}
+				for (int j = 0; j < (N6 - 1 - 2 * i); j++) {
+					*ptr = ++k;
+					ptr -= N6;
+				}
+			}
+		}
+		else if (n == 8)
+		{
+
+			int k = 0;
+			for (int i = 0; i < N8 / 2; i++) {
+				int* ptr = &Arr8[i][i];
+				for (int j = 0; j < (N8 - 1 - 2 * i); j++) {
+					*ptr = ++k;
+					ptr += 1;
+				}
+				for (int j = 0; j < (N8 - 1 - 2 * i); j++) {
+					*ptr = ++k;
+					ptr += N8;
+				}
+				for (int j = 0; j < (N8 - 1 - 2 * i); j++) {
+					*ptr = ++k;
+					ptr -= 1;
+				}
+				for (int j = 0; j < (N8 - 1 - 2 * i); j++) {
+					*ptr = ++k;
+					ptr -= N8;
+				}
+			}
+		}
+		else if (n == 10)
+		{
+
+			int k = 0;
+			for (int i = 0; i < N10 / 2; i++) {
+				int* ptr = &Arr10[i][i];
+				for (int j = 0; j < (N10 - 1 - 2 * i); j++) {
+					*ptr = ++k;
+					ptr += 1;
+				}
+				for (int j = 0; j < (N10 - 1 - 2 * i); j++) {
+					*ptr = ++k;
+					ptr += N10;
+				}
+				for (int j = 0; j < (N10 - 1 - 2 * i); j++) {
+					*ptr = ++k;
+					ptr -= 1;
+				}
+				for (int j = 0; j < (N10 - 1 - 2 * i); j++) {
+					*ptr = ++k;
+					ptr -= N10;
+				}
+			}
+		}
+		break;
+	case 2:
+		if (n == 6)
+		{
+			int k = 0;
+			int* ptr = &Arr6[0][0];
+			for (int i = 0; i < N6 / 2; i++) {
+				for (int j = 0; j < (N6 - 1); j++) {
+					*ptr = ++k;
+					ptr += N6;
+				}
+				*ptr = ++k;
+				ptr += 1;
+				for (int j = 0; j < (N6 - 1); j++) {
+					*ptr = ++k;
+					ptr -= N6;
+				}
+				*ptr = ++k;
+				ptr += 1;
+			}
+		}
+		else if (n == 8)
+		{
+			int k = 0;
+			int* ptr = &Arr8[0][0];
+			for (int i = 0; i < N8 / 2; i++) {
+				for (int j = 0; j < (N8 - 1); j++) {
+					*ptr = ++k;
+					ptr += N8;
+				}
+				*ptr = ++k;
+				ptr += 1;
+				for (int j = 0; j < (N8 - 1); j++) {
+					*ptr = ++k;
+					ptr -= N8;
+				}
+				*ptr = ++k;
+				ptr += 1;
+			}
+		}
+		else if (n == 10)
+		{
+			int k = 0;
+			int* ptr = &Arr10[0][0];
+			for (int i = 0; i < N10 / 2; i++) {
+				for (int j = 0; j < (N10 - 1); j++) {
+					*ptr = ++k;
+					ptr += N10;
+				}
+				*ptr = ++k;
+				ptr += 1;
+				for (int j = 0; j < (N10 - 1); j++) {
+					*ptr = ++k;
+					ptr -= N10;
+				}
+				*ptr = ++k;
+				ptr += 1;
+			}
+		}
+		break;
+
+	}
+
+	// 1.3) Выводим массив
+	if (n == 6) PrintArray((int*)Arr6, n, n);
+	else if (n == 8) PrintArray((int*)Arr8, n, n);
+	else if (n == 10) PrintArray((int*)Arr10, n, n);
+
+	// 2) Меняем блоки местами
+	cout << "\t\t\tЗадание 2" << endl << endl;
+	bool not_enough = 1;
+	do {
+
+		incorrect = 1;
+		do {
+			cout << "Выберите схему перестановки (от 1 до 4): ";
+			cin >> number;
+			if (number >= 1 && number <= 4)
+				incorrect = 0;
+			else
+				cout << "Введено неверное значение." << endl;
+		} while (incorrect);
+		switch (number) {
+		case 1:
+			if (n == 6) SwapAndPrint1((int*)Arr6, n);
+			else if (n == 8) SwapAndPrint1((int*)Arr8, n);
+			else if (n == 10) SwapAndPrint1((int*)Arr10, n);
+			break;
+		case 2:
+			if (n == 6) SwapAndPrint2((int*)Arr6, n);
+			else if (n == 8) SwapAndPrint2((int*)Arr8, n);
+			else if (n == 10) SwapAndPrint2((int*)Arr10, n);
+			break;
+		case 3:
+			if (n == 6) SwapAndPrint3((int*)Arr6, n);
+			else if (n == 8) SwapAndPrint3((int*)Arr8, n);
+			else if (n == 10) SwapAndPrint3((int*)Arr10, n);
+			break;
+		case 4:
+			if (n == 6) SwapAndPrint4((int*)Arr6, n);
+			else if (n == 8) SwapAndPrint4((int*)Arr8, n);
+			else if (n == 10) SwapAndPrint4((int*)Arr10, n);
+			break;
+		}
+
+		cout << "Повторить - введите 1; дальше - введите 0: ";
+		cin >> not_enough;
+		cout << endl;
+	} while (not_enough);
+
+	// 3) Сортируем массив - не сортирует тварь
+	cout << "\t\t\tЗадание 3" << endl << endl;
+	if (n == 6) SortAndPrint((int*)Arr6, n);
+	else if (n == 8) SortAndPrint((int*)Arr8, n);
+	else if (n == 10) SortAndPrint((int*)Arr10, n);
+
+	// 4) Изменяем элементы массива
+	cout << "\t\t\tЗадание 4" << endl << endl;
+	if (n == 6) ChangeAndPrint((int*)Arr6, n);
+	else if (n == 8) ChangeAndPrint((int*)Arr8, n);
+	else if (n == 10) ChangeAndPrint((int*)Arr10, n);
+
+
+}
+
+void print(string str) {
+	cout << str << endl << endl;
+}
+string Replacement(string str)
+{
+	int len = str.length();
+	for (int i = 0; i < len / 2; i++)
+	{
+		char temp = str[i];
+		str[i] = str[len - i - 1];
+		str[len - i - 1] = temp;
+	}
+	for (int i = 0, j = 0; i <= len; ++i, ++j)
+		if (str[i] == ' ' || str[i] == '\0')
+		{
+			for (int t = 0; t < j / 2; ++t)
+			{
+				char temp = str[i - t - 1];
+				str[i - t - 1] = str[i - j + t];
+				str[i - j + t] = temp;
+			}
+			++i;
+			j = 0;
+		}
+	return(str);
+}
+void LinearSearch(string str1, string sub) {
+	cout << endl;
+	int len = str1.length();
+	int s_len = sub.length();
+	bool include = 0;
+	for (int i = 0; i < len - s_len + 1; i++) {
+		if (str1[i] == sub[0]) {
+			int count = 1;
+			for (int j = 1; j < s_len; j++) {
+				if (str1[i + j] == sub[j])
+					++count;
+			}
+			if (count == s_len) {
+				cout << i << " ";
+				include = 1;
+			}
+		}
+	}
+	switch (include) {
+	case 0:
+		cout << "Такой подстроки нет в строке.\n";
+		break;
+	case 1:
+		cout << "- индекс(-ы) подстроки.\n";
+		break;
+	}
+}
+void Task5(string str1) {
+	cout << "\n\t\t\tЗадание 5\n";
+	string sub;
+	cout << "Введите искомую подстроку:\n";
+	getline(cin, sub);
+	LinearSearch(str1, sub);
+
+}
+void Lab4()
+{
+	//1) вводим строку
+	cout << "\t" << "task1" << endl;
+	setlocale(0, "");
+	int number;
+	cout << "Choose how to read the text: '1' from the keyboard or '2' from the file:";
+	cin >> number;
+	string str;
+	if (number == 1) {
+		getline(cin, str);
+		getline(cin, str);
+	}
+	cout << endl;
+	string str1 = str;
+	//удалим все лишние пробелы
+	cout << "\t" << "task2" << endl;
+	int len = str.length();
+	while (str[0] == ' ')
+		str.erase(0, 1);
+	len = str.length();
+	while (str[len - 2] == ' ')
+		str.erase(len - 2, 1);
+
+	len = str.length();
+	int count = 0;
+	for (int i = 0; i < len - 1 - count; i++) {
+		if (str[i] == ' ' && str[i + 1] == ' ') {
+			str.erase(i, 1);
+			--i;
+			++count;
+		}
+	}
+	len = str.length();
+	cout << "Без лишних пробелов:" << endl << str << endl;
+	count = 0;
+	for (int i = 0; i < len - 1 - count; i++) {
+		if ((int(str[i]) >= 33 && int(str[i]) <= 47 && str[i] == str[i + 1]) || ((int(str[i]) >= 58 && int(str[i]) <= 63 && str[i] == str[i + 1]))) {
+			str.erase(i, 1);
+			--i;
+			++count;
+		}
+	}
+	cout << endl;
+	len = str.length();
+	cout << "Без лишних знаков припинания: " << endl << str << endl;
+	//исправление регистра
+	for (int i = 0; i < len; i++) {
+		if (int(str[i]) >= 65 && int(str[i]) <= 90)
+			str[i] += 32;
+	}
+	cout << "С нижним регистром символов: " << endl << str << endl;
+	cout << "\t" << "task3" << endl;
+	//1 вариант(Вывести на экран слова последовательности в обратном порядке)
+	str = Replacement(str);
+	print(str);
+	//4 задание(Вывести на экран ту же последовательность, заменив во всех словах первую букву соответствующей прописной буквой)
+	cout << "\t" << "task4:" << endl;
+	cout << "искомая строка: " << endl << str1 << endl << "Cтрока,в которой первая буква у всех слов заменена на прописную :" << endl;;
+	len = str1.length();
+	char ch;
+	char ly;
+	ch = tolower(str1[0]);
+	cout << ch;
+	for (int i = 1; i < len; i++) {
+		ly = str1[i];
+		if (str1[i - 1] == ' ') {
+			ly = tolower(str1[i]);
+
+		}
+		cout << ly;
+	}
+	//5 задание
+	Task5(str1);
+
+
+}
