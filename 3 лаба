@@ -1,0 +1,693 @@
+#include <iostream>
+#include <string>
+#include <stack>
+
+using namespace std;
+
+
+class Stack 
+{
+private:
+	struct Node 
+	{
+		char val;
+		Node* next;
+		Node(char _val) : val(_val), next(nullptr) {}
+	};
+	Node* root;
+public:
+	Stack() : root(nullptr) {}
+
+	bool empty() 
+	{
+		return root == nullptr;
+	}
+
+	void push(int _val) 
+	{
+		Node* newnode = new Node(_val);
+		newnode->next = root;
+		root = newnode;
+	}
+
+	void pop() 
+	{
+		if (empty())
+			return;
+		else 
+		{
+			Node* delnode = root;
+			root = root->next;
+			delete delnode;
+		}
+	}
+
+	char top() 
+	{
+		return root->val;
+	}
+};
+
+int pr(char ch) 
+{
+	switch (ch) {
+	case '(': return 1;
+	case '+': case '-': return 2;
+	case '*': case '/': return 3;
+	default: return 0;
+	}
+}
+
+ string int2str(int num)
+ {
+	string rev_str = "";
+	do 
+	{
+		rev_str += char(num % 10 + 48);
+		num /= 10;
+	} while (num != 0);
+
+	int len = rev_str.length();
+	string str = "";
+	for (int i = 0; i < len; i++) 
+	{
+		str += rev_str[len - 1 - i];
+	}
+
+	return str;
+}
+
+int st(int a, int p) 
+{
+	int answer = 1;
+	for (int i = 0; i < p; i++) 
+	{
+		answer *= a;
+	}
+	return answer;
+}
+
+int str2int(string str) 
+{
+	int num = 0;
+	int len = str.length();
+	for (int i = 0; i < len; i++) 
+	{
+		num += st(10, len - i - 1) * (int(str[i]) - 48);
+	}
+	return num;
+}
+
+int calcValue(string str, string vars, int* arr) 
+{
+	int answer = 0;
+	int len = str.length();
+	int var_count = 0;
+	for (int i = 0; i < len; i++) 
+	{
+		if (pr(str[i]) == 0 && !isdigit(str[i]))
+		{
+			var_count++;
+		}
+	}
+
+	if (var_count != 0) 
+	{
+		int p = 0;
+		int i = 0;
+		do 
+		{
+			if (pr(str[i]) == 0 && !isdigit(str[i])) {
+				str.replace(i, 1, int2str(arr[vars.find(str[i])])); // заменяем переменные на числа
+				p++;
+			}
+			i++;
+		} while (p != var_count);
+	}
+	// далее следует написать калькулятор для выражений без скобок
+	len = str.length();
+	int plus_count = 0, minus_count = 0, umnozh_count = 0, razdel_count = 0;
+	for (int i = 0; i < len; i++) {
+		if (pr(str[i]) != 0) {
+			if (str[i] == '+')
+				plus_count++;
+			else if (str[i] == '-')
+				minus_count++;
+			else if (str[i] == '*')
+				umnozh_count++;
+			else if (str[i] == '/')
+				razdel_count++;
+		}
+	}
+	int pr2_count = plus_count + minus_count;
+	int pr3_count = umnozh_count + razdel_count;
+	while (pr3_count) 
+	{
+		len = str.length();
+		int left, right;
+		for (int i = 0; i < len; i++) 
+		{
+			if (pr(str[i]) == 3)
+			{
+				left = i;
+				right = i;
+				while (true) {
+					if (left - 1 >= 0) {
+						if (isdigit(str[left - 1])) {
+							left--;
+						}
+						else
+							break;
+					}
+					else
+						break;
+				}
+				while (true) {
+					if (right + 1 < len) {
+						if (isdigit(str[right + 1])) {
+							right++;
+						}
+						else
+							break;
+					}
+					else
+						break;
+				}
+				// на данном шаге мы имеем левый и правый индекс бинарного выражения
+				int local_answer_int = 0;
+				string l_str = "";
+				for (int j = left; j < i; j++)
+				{
+					l_str += str[j];
+				}
+				int l_int = str2int(l_str);
+				string r_str = "";
+				for (int j = i + 1; j < right + 1; j++)
+				{
+					r_str += str[j];
+				}
+				int r_int = str2int(r_str);
+				switch (str[i]) 
+				{
+				case '*':
+					local_answer_int = l_int * r_int;
+					break;
+				case '/':
+					local_answer_int = l_int / r_int;
+					break;
+				}
+				string local_answer_str = int2str(local_answer_int);
+				str.replace(left, right - left + 1, local_answer_str);
+				pr3_count--;
+				break;
+			}
+		}
+	}
+	while (pr2_count) 
+	{
+		len = str.length();
+		int left, right;
+		for (int i = 0; i < len; i++) 
+		{
+			if (pr(str[i]) == 2) 
+			{
+				left = i;
+				right = i;
+				while (true) {
+					if (left - 1 >= 0)
+					{
+						if (isdigit(str[left - 1]))
+						{
+							left--;
+						}
+						else
+							break;
+					}
+					else
+						break;
+				}
+				while (true) 
+				{
+					if (right + 1 < len) {
+						if (isdigit(str[right + 1]))
+						{
+							right++;
+						}
+						else
+							break;
+					}
+					else
+						break;
+				}
+				// на данном шаге мы имеем левый и правый индекс бинарного выражения
+				int local_answer_int = 0;
+				string l_str = "";
+				for (int j = left; j < i; j++) 
+				{
+					l_str += str[j];
+				}
+				int l_int = str2int(l_str);
+				string r_str = "";
+				for (int j = i + 1; j < right + 1; j++) 
+				{
+					r_str += str[j];
+				}
+				int r_int = str2int(r_str);
+				switch (str[i]) 
+				{
+				case '+':
+					local_answer_int = l_int + r_int;
+					break;
+				case '-':
+					local_answer_int = l_int - r_int;
+					break;
+				}
+				string local_answer_str = int2str(local_answer_int);
+				str.replace(left, right - left + 1, local_answer_str);
+				pr2_count--;
+				break;
+			}
+		}
+	}
+	answer = str2int(str);
+	return answer;
+}
+
+int calc(string str)
+{
+	int answer = 0;
+	int len = str.length();
+	int brackets_count = 0;
+	string vars = ""; // строка с соответствующими переменными
+
+	for (int i = 0; i < len; i++) 
+	{ // считаем количество выражений в скобках
+		if (str[i] == '(')
+			brackets_count++;
+	}
+	int* arr_val = new int[brackets_count]; // массив со значениями внутри скобок
+
+	for (int i = 0; i < brackets_count; i++) 
+	{ // раскрываем скобки
+		int right = str.find(')'); // находим индекс закрывающей скобки
+		int left;
+		for (left = right; str[left] != '('; left--); // находим индекс открывающей скобки
+		string inside = "";
+		for (int j = left + 1; j < right; j++) { // в строку inside добавляем внутреннее содержимое скобок
+			inside += str[j];
+		}
+		arr_val[i] = calcValue(inside, vars, arr_val);
+		string str_var = "0";
+		str_var[0] = char(65 + i);
+		str.replace(left, right - left + 1, str_var); // заменяем скобки переменными
+		vars += char(65 + i);
+
+	}
+
+	//example: 7+X-Y, где Y = 5+Z, где Z = 7-W
+	answer = calcValue(str, vars, arr_val);
+
+	delete[] arr_val;
+
+	return answer;
+}
+
+ string initializing(std::string str) {
+	int len = str.length();
+	for (int i = 0; i < len; i++) 
+	{
+		if (pr(str[i]) == 0) {
+			if (!isdigit(str[i]) && str[i] != ')')
+			{
+				char value;
+				const char var = str[i];
+				std::cout << str[i] << " = ";
+				std::cin >> value;
+				bool in = true;
+
+				while (in) 
+				{
+					int ind = str.find(var);
+					if (ind >= 0 && ind <= len) {
+						str[ind] = value;
+					}
+					else
+						in = false;
+				}
+			}
+		}
+	}
+	return str;
+}
+
+ string RPN(std::string input)
+ {
+	Stack st;
+	cout << "Строим ОПЗ:";
+	string output;
+	cout << endl;
+	int len = input.length();
+
+	for (int i = 1; i < len; i++)
+	{ // проверка на корректность ввода
+		if (input[i] != ')' && input[i - 1] != ')' && pr(input[i - 1]) == 0) {
+			if (pr(input[i]) == pr(input[i - 1])) {
+				cout << "Invalid input";
+				return "";
+			}
+		}
+	}
+
+	int operand_count = 0, operation_count = 0;
+
+	for (int i = 0; i < len; i++) {
+		if (pr(input[i]) == 0 && input[i] != ')')
+		{ // встречается операнд
+			if (input[i] == ' ') 
+			{ // проверка на корректность ввода
+				cout << "Invalid input";
+				return "";
+			}
+			cout << "'" << input[i] << "' - переменная. Помещаем её в строку." << endl;
+			operand_count++;
+			output += input[i];
+			cout << "Строка: " << output << endl;
+		}
+
+		else if (pr(input[i]) == 1) 
+		{ // встречается '('
+			cout << "'(' - открывающая скобка. Помещаем в стек." << endl;
+			st.push(input[i]);
+		}
+
+		else if (input[i] == ')') 
+		{ // встречается ')'
+			cout << "')' - закрывающая скобка. Извлекаем из стека в строку все символы до открывающейся скобки. Уничтожаем обе скобки." << endl;
+			do {
+				output += st.top();
+				cout << "Строка: " << output << endl;
+				st.pop();
+			} while (st.top() != '(');
+			st.pop();
+		}
+
+		else { // встречаются '+', '-', '*', '/'
+			operation_count++;
+			if (st.empty()) 
+			{ // если стек пуст
+				cout << "'" << input[i] << "' - операция (приоритет " << pr(input[i]) << "). Стек пуст. Помещаем в стек." << endl;
+				st.push(input[i]);
+			}
+
+			else if (pr(st.top()) < pr(input[i]))
+			{ // если приоритет данной операции больше приоритета вершины стека
+				cout << "'" << input[i] << "' - операция (приоритет " << pr(input[i]) << "). Проверяем стек: на вершине символ '" << st.top() << "' (приоритет " << pr(st.top()) << "). Помещаем символ '" << input[i] << "' в стек." << endl;
+				st.push(input[i]);
+			}
+
+			else
+			{ // если приоритет данной операции НЕ больше приоритета вершины стека
+				cout << "'" << input[i] << "' - операция (приоритет " << pr(input[i]) << "). Проверяем стек: на вершине символ '" << st.top() << "' (приоритет " << pr(st.top()) << ").\nИзвлекаем символы из стека в строку, пока приоритет данной операции не больше приоритета операции на вершине стека." << endl;
+				while (pr(st.top()) >= pr(input[i])) {
+					output += st.top();
+					cout << "Строка: " << output << endl;
+					st.pop();
+					if (st.empty())
+						break;
+				}
+				if (st.empty())
+					cout << "Стек пуст. Помещаем символ '" << input[i] << "' в стек." << endl;
+				else
+					cout << "Проверяем стек: на вершине символ '" << st.top() << "' (приоритет " << pr(st.top()) << "). Помещаем символ '" << input[i] << "' в стек." << endl;
+				st.push(input[i]);
+			}
+		}
+	}
+
+	cout << "Выражение прочитано." << endl;
+	if (!st.empty()) 
+	{ // если в стеке остались знаки операций
+		cout << "Проверяем стек. В стеке есть операции. Заносим операции в строку." << endl;
+		while (pr(st.top())) {
+			output += st.top();
+			cout << "Строка: " << output << endl;
+			st.pop();
+			if (st.empty())
+				break;
+		}
+	}
+	cout << endl << "ОПЗ построена:" << endl;
+
+	if (operand_count - 1 == operation_count && operation_count != 0) 
+	{ // проверка на корректность ввода
+		cout << output << endl;
+		string new_output = initializing(output);
+		if (new_output != output) {
+			cout << new_output << endl << endl;
+			return new_output;
+		}
+		return output;
+	}
+	else {
+		cout << "Invalid input" << endl;
+		return "";
+	}
+}
+
+int calcRPN(string str) 
+{
+	stack<int> st;
+	str = initializing(str);
+	int len = str.length();
+
+	for (int i = 0; i < len; i++) {
+		if (pr(str[i]) == 0) {
+			int num = int(str[i]) - 48;
+			st.push(num);
+		}
+		else if (pr(str[i]) > 1) {
+			switch (pr(str[i])) {
+			case 2:
+				if (str[i] == '+') {
+					int right = st.top();
+					st.pop();
+					int left = st.top();
+					st.pop();
+					st.push(left + right);
+					break;
+				}
+				else if (str[i] == '-') {
+					int right = st.top();
+					st.pop();
+					int left = st.top();
+					st.pop();
+					st.push(left - right);
+					break;
+				}
+			case 3:
+				if (str[i] == '*') {
+					int right = st.top();
+					st.pop();
+					int left = st.top();
+					st.pop();
+					st.push(left * right);
+					break;
+				}
+				else if (str[i] == '/') {
+					int right = st.top();
+					st.pop();
+					int left = st.top();
+					st.pop();
+					st.push(left / right);
+					break;
+				}
+			}
+		}
+	}
+	return st.top();
+}
+
+ string PN(string input) 
+ {
+	cout << "Строим ПЗ:" << endl;
+	input = initializing(input);
+	cout << "Переворачиваем:" << endl;
+	reverse(input.begin(), input.end());
+	cout << input << endl;
+	int len = input.length();
+	cout << "Разворачиваем скобки:" << endl;
+	for (int i = 0; i < len; i++) {
+		if (input[i] == ')') {
+			input[i] = '[';
+		}
+		else if (input[i] == '(') {
+			input[i] = ']';
+		}
+	}
+	for (int i = 0; i < len; i++) {
+		if (input[i] == ']') {
+			input[i] = ')';
+		}
+		else if (input[i] == '[') {
+			input[i] = '(';
+		}
+	}
+	cout << input << endl;
+	input = RPN(input);
+	cout << "Переворачиваем." << endl;
+	reverse(input.begin(), input.end());
+	cout << endl << "ПЗ построена:" << endl << input << endl;
+	return input;
+}
+
+int calcPN(string str) 
+{
+	reverse(str.begin(), str.end());
+	stack <int> st;
+	str = initializing(str);
+	int len = str.length();
+
+	for (int i = 0; i < len; i++) {
+		if (pr(str[i]) == 0) {
+			int num = int(str[i]) - 48;
+			st.push(num);
+		}
+		else if (pr(str[i]) > 1) {
+			switch (pr(str[i])) {
+			case 2:
+				if (str[i] == '+') {
+					int right = st.top();
+					st.pop();
+					int left = st.top();
+					st.pop();
+					st.push(left + right);
+					break;
+				}
+				else if (str[i] == '-') {
+					int right = st.top();
+					st.pop();
+					int left = st.top();
+					st.pop();
+					st.push(right - left);
+					break;
+				}
+			case 3:
+				if (str[i] == '*') {
+					int right = st.top();
+					st.pop();
+					int left = st.top();
+					st.pop();
+					st.push(left * right);
+					break;
+				}
+				else if (str[i] == '/') {
+					int right = st.top();
+					st.pop();
+					int left = st.top();
+					st.pop();
+					st.push(right / left);
+					break;
+				}
+			}
+		}
+	}
+	return st.top();
+}
+
+int main() 
+{
+	srand(time(0));
+	setlocale(LC_ALL, "Russian");
+
+
+	string infix, prefix, postfix;
+	int infix_c, prefix_c, postfix_c;
+	int task = 1;
+	do {
+		cout << "\t1) Ввести инфиксную форму;\n\t2) Посчитать инфиксную форму;\n\t3) Преобразовать в ОПЗ;\n\t4) Посчитать ОПЗ;\n\t5) Преобразовать в ПЗ;\n\t6) Посчитать ПЗ;\n\nВыберите задание: ";
+		cin >> task;
+		switch (task) {
+		case 1:
+			if (infix.size() == 0) 
+			{
+				cout << "Введите инфиксное выражение:" << endl;
+				cin.get();
+				getline(cin, infix);
+				cout << endl;
+			}
+			else
+			{
+				string new_infix;
+				cout << "Введите инфиксное выражение или оставьте предыдущее выражение нажатием Enter:" << endl;
+				cin.get();
+				getline(cin, new_infix);
+				cout << endl;
+				if (new_infix.size() != 0) {
+					infix = new_infix;
+				}
+			}
+			break;
+		case 2:
+			if (infix.size() == 0)
+			{
+				cout << "Для начала выполните пункт 1." << endl << endl;
+			}
+			else 
+			{
+				infix_c = calc(infix);
+				cout << "Выражение равно " << infix_c << "." << endl << endl;
+			}
+			break;
+		case 3:
+			if (infix.size() == 0) 
+			{
+				cout << "Для начала выполните пункт 1." << endl << endl;
+			}
+			else
+			{
+				postfix = RPN(infix);
+				cout << endl;
+			}
+			break;
+		case 4:
+			if (postfix.size() == 0) 
+			{
+				cout << "Для начала выполните пункт 3." << endl << endl;
+			}
+			else
+			{
+				postfix_c = calcRPN(postfix);
+				cout << "Выражение равно " << postfix_c << "." << endl << endl;
+			}
+			break;
+		case 5:
+			if (infix.size() == 0) 
+			{
+				cout << "Для начала выполните пункт 1." << endl << endl;
+			}
+			else 
+			{
+				prefix = PN(infix);
+				cout << endl;
+			}
+			break;
+		case 6:
+			if (prefix.size() == 0) 
+			{
+				cout << "Для начала выполните пункт 5." << endl << endl;
+			}
+			else
+			{
+				prefix_c = calcPN(prefix);
+				cout << "Выражение равно " << prefix_c << "." << endl <<endl;
+			}
+			break;
+		default:
+			cout << "Работа программы прекращена." << endl;
+			task = 0;
+		}
+	} while (task != 0);
+
+	
+	return 0;
+}
