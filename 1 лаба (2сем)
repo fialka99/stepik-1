@@ -1,0 +1,547 @@
+// лаба по структурам.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
+//
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+struct Student {
+	string full_name; // Фамилия Имя Отчество
+	string sex;         // Пол: M/W
+	int group;        // Номер группы
+	int id;           // Номер студента в списке 
+	int grades[8];    // Оценки за экзамены и диф. зачёты
+	
+};
+
+
+const int SIZE = 10;
+
+void printTask();
+void Change(struct Student* students);
+void printStudent(struct Student* students, int i);
+void print(struct Student*);
+void printGroup(struct Student* students);
+void printBestStudent(struct Student* students);
+void printMaleFemale(struct Student* students);
+void printOtchet(struct Student* students);
+void print_nomerStudenta(struct Student* students);
+
+int main()
+{
+	cout << sizeof(Student)<<endl;
+
+
+	setlocale(LC_ALL, "Russian");
+	const int SIZE = 10;
+	struct Student students[SIZE];
+	
+	students[0].full_name = "Аксенов Семен Ярикович";
+	students[0].sex = "M";
+	students[0].group = 2121;
+	students[0].id = 1;
+	students[0].grades[0] = 5;
+	students[0].grades[1] = 4;
+	students[0].grades[2] = 4;
+	students[0].grades[3] = 5;
+	students[0].grades[4] = 4;
+	students[0].grades[5] = 4;
+	students[0].grades[6] = 4;
+	students[0].grades[7] = 4;
+	
+	//2 студент
+	students[1].full_name = "Валуев Артем Марсович";
+	students[1].sex = "M";
+	students[1].group = 2223;
+	students[1].id = 2;
+	students[1].grades[0] = 4;
+	students[1].grades[1] = 3;
+	students[1].grades[2] = 4;
+	students[1].grades[3] = 3;
+	students[1].grades[4] = 4;
+	students[1].grades[5] = 4;
+	students[1].grades[6] = 3;
+	students[1].grades[7] = 5;
+	
+	//3 студент
+	students[2].full_name = "Шакурова Аделина Викторовна";
+	students[2].sex = "W";
+	students[2].group = 2431;
+	students[2].id = 3;
+	students[2].grades[0] = 5;
+	students[2].grades[1] = 3;
+	students[2].grades[2] = 4;
+	students[2].grades[3] = 5;
+	students[2].grades[4] = 4;
+	students[2].grades[5] = 3;
+	students[2].grades[6] = 4;
+	students[2].grades[7] = 4;
+	
+	//4 студент
+	students[3].full_name = "Криштиану Роналду";
+	students[3].sex = "M";
+	students[3].group = 2221;
+	students[3].id = 7;
+	students[3].grades[0] = 3;
+	students[3].grades[1] = 3;
+	students[3].grades[2] = 3;
+	students[3].grades[3] = 3;
+	students[3].grades[4] = 3;
+	students[3].grades[5] = 5;
+	students[3].grades[6] = 3;
+	students[3].grades[7] = 5;
+	
+	//5 студент
+	students[4].full_name = "Лионеля Месси";
+	students[4].sex = "M";
+	students[4].group = 2565;
+	students[4].id = 10 ;
+	students[4].grades[0] = 5;
+	students[4].grades[1] = 5;
+	students[4].grades[2] = 5;
+	students[4].grades[3] = 5;
+	students[4].grades[4] = 5;
+	students[4].grades[5] = 5;
+	students[4].grades[6] = 5;
+	students[4].grades[7] = 5;
+	
+	//6 студент
+	students[5].full_name = "Жанна Фриски";
+	students[5].sex = "W";
+	students[5].group = 2121;
+	students[5].id = 13;
+	students[5].grades[0] = 4;
+	students[5].grades[1] = 3;
+	students[5].grades[2] = 3;
+	students[5].grades[3] = 3;
+	students[5].grades[4] = 4;
+	students[5].grades[5] = 3;
+	students[5].grades[6] = 4;
+	students[5].grades[7] = 5;
+	//7 студент
+	students[6].full_name = "Ангелина Джоли";
+	students[6].sex = "W";
+	students[6].group = 2012;
+	students[6].id = 15;
+	students[6].grades[0] = 4;
+	students[6].grades[1] = 4;
+	students[6].grades[2] = 4;
+	students[6].grades[3] = 4;
+	students[6].grades[4] = 4;
+	students[6].grades[5] = 5;
+	students[6].grades[6] = 5;
+	students[6].grades[7] = 5;
+	//8 студент
+	students[7].full_name = "Вин Дизель";
+	students[7].sex = "M";
+	students[7].group = 2777;
+	students[7].id = 1;
+	students[7].grades[0] = 5;
+	students[7].grades[1] = 5;
+	students[7].grades[2] = 5;
+	students[7].grades[3] = 5;
+	students[7].grades[4] = 5;
+	students[7].grades[5] = 5;
+	students[7].grades[6] = 5;
+	students[7].grades[7] = 5;
+	//9 студент
+	students[8].full_name = "Лана Роудс";
+	students[8].sex = "W";
+	students[8].group = 2269;
+	students[8].id =12;
+	students[8].grades[0] = 3;
+	students[8].grades[1] = 3;
+	students[8].grades[2] = 3;
+	students[8].grades[3] = 4;
+	students[8].grades[4] = 3;
+	students[8].grades[5] = 4;
+	students[8].grades[6] = 3;
+	students[8].grades[7] = 5;
+	//10 студент
+	students[9].full_name = "Конор Макгрегор";
+	students[9].sex = "M";
+	students[9].group = 2373;
+	students[9].id = 17;
+	students[9].grades[0] = 4;
+	students[9].grades[1] = 5;
+	students[9].grades[2] = 5;
+	students[9].grades[3] = 4;
+	students[9].grades[4] = 4;
+	students[9].grades[5] = 4;
+	students[9].grades[6] = 5;
+	students[9].grades[7] = 4;
+
+
+	int task = 1;
+	while (task)
+	{
+		printTask();
+		cout << "Выбирете номер задания от 1-9: ";
+		cin >> task;
+		switch (task) {
+		case 1: {
+			Change(students);
+			cout << endl;
+			break;
+		}
+		case 2: {
+			print(students);
+			cout << endl;
+			break;
+		}
+		case 3: {
+			printGroup(students);
+			cout << endl;
+			break;
+		}
+		case 4: {
+			printBestStudent(students);
+			cout << endl;
+			break;
+		}
+		case 5: {
+
+			printMaleFemale(students);
+
+			cout << endl;
+			break;
+		}
+		case 6: {
+
+			printOtchet(students);
+			cout << endl;
+			break;
+
+
+		}
+		case 7: {
+
+			print_nomerStudenta(students);
+			cout << endl;
+			break;
+
+
+		}
+
+
+
+
+		}
+	}
+}
+	void printTask()
+{
+	
+	cout << "1: внесение изменений в уже имеющуюся запись" << endl;
+	cout << "2: вывод данных о студентах" << endl;
+	cout << "3: Вывод информации обо всех студентах группы N. N – инициализируется пользователем" << endl;
+	cout << "4: Вывод топа самых успешных студентов с наивысшим по рейтингу средним баллом за прошедшую сессию" << endl;
+	cout << "5: Вывод количества студентов мужского и женского пола" << endl;
+	cout << "6: Вывод данных о студентах, которые не получают стипендию; учатся только на «хорошо» и «отлично»; учатся только на «отлично»" << endl;
+	cout << "7: Вывод данных о студентах, имеющих номер в списке – k" << endl;
+	
+
+}
+
+void Change(struct Student* students)
+{
+	int numb;
+	string parametr;
+	bool yes, yes_1;
+	do {
+		cout << "Введите номер студента, у которого хотите поменять данные:";
+		cin >> numb;
+		do {
+			cout << "Что вы хотите поменять(full_name/sex/group/id/grades)";
+			cin >> parametr;
+			if (parametr == "full_name")
+			{
+				cout << "Введите новое ФИО:";
+				cin>>(students + numb)->full_name;
+			}
+			if (parametr == "sex")
+			{
+				cout << "Введите новый пол:";
+				cin >> (students + numb)->sex;
+			}
+			if (parametr == "group")
+			{
+				cout << "Введите новую группу:";
+				cin >> (students + numb)->group;
+			}
+			if (parametr == "id")
+			{
+				cout << "Введите новый id:";
+				cin >> (students + numb)->id;
+			}
+			if (parametr == "grades")
+			{
+				cout << "Введите новые оценки:";
+				for (int i = 0; i < 8; i++) {
+					cin >> (students + numb)->grades[i];
+
+				}
+			}
+
+			string yes_or_no;
+			cout << "Хотите ли вы поменять что-то еще(yes/no)";
+			cin >> yes_or_no;
+			if (yes_or_no == "yes") {
+				yes_1 = true;
+			}
+			else {
+				yes_1 = false;
+			}
+
+		} while (yes_1);
+		string yes_or_no;
+		cout << "Хотите ли выбрать другого студента(yes/no)";
+		cin >> yes_or_no;
+		if (yes_or_no == "yes") {
+			yes = true;
+		}
+		else {
+			yes = false;
+		}
+
+
+
+	} while (yes);
+}
+void printStudent(struct Student* students,int i)
+{
+	cout << "ФИО:" << (students + i)->full_name<<endl;
+	cout << "Sex:" << (students + i)->sex<<endl;
+	cout << "Номер группы:" << (students + i)->group<<endl;
+	cout << "Номер в группе:" << (students + i)->id<<endl;
+	cout << "Оценки:";
+	for (int j = 0; j < 8; j++)
+	{
+		cout << (students + i)->grades[j] << " ";
+
+	}
+
+}
+
+void print(struct Student* students)
+{
+	for (int i = 0; i < SIZE; i++)
+	{
+		printStudent(students, i);
+
+
+
+	}
+
+}
+void printGroup(struct Student* students)
+{
+	cout << "Введите номер группы,чтобы увидеть всех студентов этой группы:";
+	int a;
+	cin >> a;
+	for (int i = 0; i < SIZE; i++)
+	{
+		if ((students + i)->group == a)
+		{
+			cout << "ФИО:" << (students + i)->full_name << endl;
+			cout << "Sex:" << (students + i)->sex << endl;
+			cout << "Номер группы:" << (students + i)->group << endl;
+			cout << "Номер в группе:" << (students + i)->id << endl;
+			cout << "Оценки:";
+			for (int j = 0; j < 8; j++)
+			{
+				cout << (students + i)->grades[j] << " ";
+
+			}
+
+		}
+
+
+
+
+	}
+
+
+
+}
+
+void printBestStudent(struct Student* students)
+{
+
+	int arr_grades[SIZE];
+	int summGrade;
+	double middle;
+	for (int i = 0; i < SIZE; i++)
+	{
+		summGrade = 0;
+		for (int j = 0; j < SIZE; j++)
+		{
+			summGrade = summGrade + (students + i)->grades[j];
+
+		}
+		middle = summGrade / 8;
+		arr_grades[i] = middle;
+	}
+	int arr_numb[SIZE];
+	for (int i = 0; i < SIZE; i++)
+	{
+
+		arr_numb[i] = i;
+
+	}
+
+
+	for (int i = 0; i < SIZE; i++)
+	{
+		for (int j = 0; j < SIZE - 1; j++)
+		{
+			if (arr_grades[i] > arr_grades[j + 1])
+			{
+				swap(arr_grades[i], arr_grades[j + 1]);
+				swap(arr_numb[i], arr_numb[j + 1]);
+			}
+		}
+
+	}
+
+	for (int i = 1; i < 4; i++)
+	{
+		printStudent(students, arr_numb[i]);
+
+		cout << endl;
+
+	}
+
+
+}
+void printMaleFemale(struct Student* students)
+{
+	int M_count = 0;
+
+	int W_count = 0;
+
+	for (int i = 0; i < SIZE; i++)
+	{
+
+		if ((students + i)->sex=="M")
+		{
+			M_count = M_count + 1;
+
+
+	   }
+
+		if ((students + i)->sex == "W")
+		{
+
+			W_count = W_count + 1;
+
+
+
+		}
+
+
+
+
+
+   }
+
+	cout << "количество мужчин:" << M_count<<endl;
+	cout << "количество женщин:" << W_count << endl;
+	
+
+
+
+
+}
+
+void printOtchet(struct Student* students)
+{
+	cout << "студенты,которые не получают стипендию:" << endl;
+	for (int i = 0; i < SIZE; i++)
+	{
+		
+		for (int j = 0; j < SIZE; j++) {
+			if ((students + i)->grades[j] == 3)
+			{
+				printStudent(students, i);
+				break;
+			}
+
+		}
+
+
+
+	}
+
+	cout << endl;
+	cout << "студенты,которые учатся только на отлично:" << endl;
+	for (int i = 0; i < SIZE; i++)
+	{
+		int otchnik_count = 0;
+		
+	
+	
+	
+		
+		for (int j = 0; j < 8; j++) {
+			if (students[i].grades[j] == 5)
+				otchnik_count = otchnik_count + 1;
+			if (otchnik_count == 8) {
+				printStudent(students, i);
+				cout << "\n";
+			}
+		}
+	}
+	cout << endl;
+	cout << "студенты,которые учатся только на отлично и на хорошо:" << endl;
+	for (int i = 0; i < SIZE; i++)
+	{
+		int otchnik_count = 0;
+		bool troika=0;
+
+
+
+
+		for (int j = 0; j < 8; j++) {
+			if (students[i].grades[j] == 5)
+				otchnik_count = otchnik_count + 1;
+			if (students[i].grades[j] == 3)
+				troika = 1;
+		}
+		if (!troika) {
+			if (otchnik_count != 8) {
+				printStudent(students, i);
+				cout << "\n";
+			}
+		}
+	}
+	cout << endl;
+}
+void print_nomerStudenta(struct Student* students)
+{
+	int ID;
+	cout << "Введите номер студента ,о котором хотите увидеть информацию:";
+	
+	cin >> ID;
+	cout << "номер студента:" << ID<<endl;
+	for (int i = 0; i < SIZE; i++)
+	{
+		if ((students + i)->id == ID)
+		
+			printStudent(students, i);
+
+		
+
+
+
+
+	}
+
+
+
+
+
+
+
+}
